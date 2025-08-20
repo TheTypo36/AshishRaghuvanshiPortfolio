@@ -8,20 +8,14 @@ on:
 jobs:
   redeploy_everything:
     runs-on: ubuntu-latest
+    name: Deploying everything to the production cluster
+
     steps:
-      - name: Write SSH key
+      - name: SSH into server and deploy
         run: |
           echo "${{ secrets.ASHISH_PRIVATE_KEY }}" > ~/ssh_key
           chmod 600 ~/ssh_key
-
-      - name: Start ssh-agent with passphrase
-        run: |
-          eval "$(ssh-agent -s)"
-          sshpass -p "${{ secrets.ASHISH_PASSKEY }}" ssh-add ~/ssh_key
-
-      - name: SSH into server and deploy
-        run: |
-          ssh -o StrictHostKeyChecking=no root@64.227.167.217 << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i ~/ssh_key root@64.227.167.217 << 'EOF'
             cd AshishRaghuvanshiPortfolio/
             git pull
             npm install
