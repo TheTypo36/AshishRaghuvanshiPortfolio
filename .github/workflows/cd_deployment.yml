@@ -8,14 +8,18 @@ on:
 jobs:
   redeploy_everything:
     runs-on: ubuntu-latest
-    name: Deploying everything to the production server
-
     steps:
-      - name: Start ssh-agent and add private key
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.ASHISH_PRIVATE_KEY }}
-          ssh-passphrase: ${{ secrets.ASHISH_PASSKEY }}
+      - name: Write SSH key
+        run: |
+          echo "${{ secrets.ASHISH_PRIVATE_KEY }}" > ~/ssh_key
+          chmod 600 ~/ssh_key
+
+      - name: Start ssh-agent with passphrase
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y sshpass
+          eval "$(ssh-agent -s)"
+          sshpass -p "${{ secrets.ASHISH_PASSKEY }}" ssh-add ~/ssh_key
 
       - name: SSH into server and deploy
         run: |
