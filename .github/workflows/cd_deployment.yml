@@ -1,0 +1,24 @@
+name: Deploy to Master
+
+on:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  redeploy_everything:
+    runs-on: ubuntu-latest
+    name: Deploying everything to the production cluster
+
+    steps:
+      - name: SSH into server and deploy
+        run: |
+          echo "${{ secrets.ASHISH_PRIVATE_KEY }}" > ~/ssh_key
+          chmod 600 ~/ssh_key
+          ssh -o StrictHostKeyChecking=no -i ~/ssh_key root@64.227.167.217 << 'EOF'
+            cd AshishRaghuvanshiPortfolio/
+            git pull
+            npm install
+            npm run build
+            pm2 restart ashishraghuvanshiportfolio
+          EOF
