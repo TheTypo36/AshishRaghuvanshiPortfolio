@@ -16,7 +16,23 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --primary: #38bdf8;
+    --secondary: #222222;
   }
+}
+
+body.light {
+  --background: #ffffff;
+  --foreground: #171717;
+  --primary: #0070f3;
+  --secondary: #f4f4f5;
+}
+
+body.dark {
+  --background: #18181b;
+  --foreground: #f4f4f5;
+  --primary: #38bdf8;
+  --secondary: #222222;
 }
 
 body {
